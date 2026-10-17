@@ -12,6 +12,8 @@ Formato: «Como atacante, quero *fazer X*, para *conseguir Y*.»
 4. Como atacante, quero juntar emails, nomes e NIFs dos clientes, para conseguir fazer phishing credível em nome da loja
 5. Como atacante, quero descobrir os ids das encomendas para enganar o cliente sobre "um problema na encomenda" (encomenda.js)
 6. Como atacante, quero escrever SQL no id do pedido de uma encomenda, para ler ou alterar qualquer tabela da base de dados. (encomendas.js)
+7. Como atacante, quero manipular o campo `sub` do JWT para um identificador arbitrário, para aceder ao perfil de outro utilizador na rota `/utilizadores/me` sem conhecer as credenciais. (autenticacao.js, utilizadores.js)
+8. Como atacante, quero conhecer um id de encomenda válido e pedir `/encomendas/:id`, para visualizar dados de encomendas de terceiros sem ter autorização. (encomendas.js)
 
 ## As quatro que não aceitamos correr
 
