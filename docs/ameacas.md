@@ -20,6 +20,6 @@ Formato: «Como atacante, quero *fazer X*, para *conseguir Y*.»
 | # | Ameaça | Onde na API |
 |---|--------|-------------|
 | 1 |Iniciar sessão só com o email de outra pessoa e obter acesso à conta.|/auth/login|
-| 2 |Usar a chave JWT exposta para criar tokens e fazer pedidos como outro utilizador, incluindo manipular o sub.|config.js, autenticacao.js, /utilizadores/me|
+| 2 |Usar a chave JWT exposta para criar tokens e fazer pedidos como outro utilizador, incluindo manipular o sub.|config.js, autenticacao.js, utilizadores/me|
 | 3 |Injetar SQL no ID da encomenda para tentar aceder ou alterar dados da base de dados.|/encomendas/:id|
 | 4 |Consultar uma encomenda de outra pessoa conhecendo o seu ID.|/encomendas/:id|
