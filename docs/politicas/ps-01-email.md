@@ -5,6 +5,7 @@
 ## Ameaça a que responde
 Iniciar sessão com o email de outra pessoa e obter acesso à conta.
 
+
 ## Objetivo
 Garantir que cada conta só é acessada por um único user
 Evitar que uma conta tenha mais doq um email de acesso
@@ -37,3 +38,23 @@ Não se aplica a:
  - A tentativa repetida de descobrir emails ou sobrecarregar o login — corresponde à ameaça de pedidos sem limite.
  - A consulta ou alteração de encomendas por ID, incluindo injeção SQL ou acesso a encomendas de terceiros.
  - A recuperação de palavra-passe, criação de contas ou confirmação de email, pois essas funcionalidades não aparecem entre os endpoints documentados atualmente.
+
+
+## Regras
+| # | Regra | Como se verifica |
+|---|-------|------------------|
+| 1 | O sistema deve permitir o acesso a uma conta apenas quando o email utilizado no login corresponde ao email associado a essa conta. | [TESTE AUTOMÁTICO FUNCIONAL]
+| 2 | Cada conta deve estar associada a um único email de acesso. | [TESTE AUTOMÁTICO FUNCIONAL]
+| 3 | Um email só pode estar associado a uma única conta. | [TESTE AUTOMÁTICO FUNCIONAL]
+| 4 | O sistema deve confirmar que o utilizador controla um novo email antes de o associar ou substituir o email da conta. | [TESTE AUTOMÁTICO FUNCIONAL]
+| 5 | Não deve ser possível iniciar sessão numa conta apenas conhecendo ou introduzindo o email de outra pessoa. | [TESTE AUTOMÁTICO FUNCIONAL]
+| 6 | Após autenticação bem-sucedida, o token emitido deve identificar exclusivamente a conta associada ao email autenticado. | [TESTE AUTOMÁTICO FUNCIONAL]
+| 7 | A procura da conta pelo email na base de dados deve devolver no máximo uma conta para cada email. | [TESTE NÃO FUNCIONAL]
+| 8 | A base de dados deve impedir a existência de emails duplicados associados a contas diferentes. | [TESTE NÃO FUNCIONAL]
+| 9 | O sistema não deve permitir a reclamação ou apropriação de uma conta através da associação de um email pertencente a outro utilizador. | [TESTE AUTOMÁTICO FUNCIONAL]
+
+
+## Responsabilidades
+- Dono PS: Raquel Azevedo
+- Revisor: Sofia 
+- Executor: Carlos
