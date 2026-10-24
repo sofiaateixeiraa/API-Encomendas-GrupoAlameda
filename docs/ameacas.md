@@ -23,3 +23,4 @@ Formato: «Como atacante, quero *fazer X*, para *conseguir Y*.»
 | 2 |Usar a chave JWT exposta para criar tokens e fazer pedidos como outro utilizador, incluindo manipular o sub.|config.js, autenticacao.js, utilizadores/me| Sofia |
 | 3 |Injetar SQL no ID da encomenda para tentar aceder ou alterar dados da base de dados.|/encomendas/:id| Carlos |
 | 4 |Consultar uma encomenda de outra pessoa conhecendo o seu ID.|/encomendas/:id| Maria |
+| 5 |Enviar pedidos de login sem limite, para descobrir que emails existem e entupir o serviço.|server.js| Gonçalo |
