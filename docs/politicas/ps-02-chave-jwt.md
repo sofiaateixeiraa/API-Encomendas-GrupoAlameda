@@ -1,3 +1,7 @@
+# PS-02 - Política de proteção da chave JWT
+
+**Dono:** Sofia Teixeira
+
 ## Ameaça a que responde
 Usar a chave JWT exposta para criar tokens e fazer pedidos como outro utilizador, incluindo manipular o `sub`.
 

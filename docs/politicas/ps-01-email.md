@@ -1,3 +1,7 @@
+# PS-01 - Política de autenticação por email
+
+**Dono:** Raquel Azevedo
+
 ## Ameaça a que responde
 Iniciar sessão com o email de outra pessoa e obter acesso à conta.
 

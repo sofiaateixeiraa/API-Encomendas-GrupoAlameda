@@ -1,3 +1,7 @@
+# PS-05 - Política de limitação de pedidos
+
+**Dono:** Gonçalo Pereira
+
 ## Ameaça a que responde
 Enviar pedidos de login sem limite, para descobrir que emails existem e entupir o serviço.
 
