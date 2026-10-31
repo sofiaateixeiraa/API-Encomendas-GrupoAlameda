@@ -41,3 +41,42 @@ Não se aplica a:
  - A consulta ou alteração de encomendas por ID, incluindo injeção SQL ou acesso a encomendas de terceiros.
  - A recuperação de palavra-passe, criação de contas ou confirmação de email, pois essas funcionalidades não aparecem entre os endpoints documentados atualmente.
  - Ataques de negação de serviço volumétricos ao nível da rede, que devem ser tratados na infraestrutura (firewall, CDN, provedor).
+
+ ## Regras de implementação
+A política deve ser aplicada de forma consistente em todo o fluxo de `POST /auth/login`. A implementação recomendada é:
+ - Aplicar, antes de qualquer acesso à base de dados ou verificação de palavra-passe, um middleware de limitação por origem (IP) numa janela de tempo;
+ - Limitar o tamanho do corpo do pedido antes de o interpretar;
+ - Normalizar o email (remover espaços, converter para minúsculas) antes de o usar como chave do limite de tentativas falhadas;
+ - Contar as tentativas falhadas por email numa janela de tempo e, ao exceder o limite, responder com `429` e o cabeçalho `Retry-After`;
+ - Fazer o bloqueio por email temporário, com expiração automática, e combiná-lo com a origem, para que um atacante não consiga bloquear a conta de outra pessoa por tempo indefinido;
+ - Procurar a conta pelo email; se não existir, executar a verificação da palavra-passe contra um hash fictício, para que o custo e o tempo de resposta sejam semelhantes aos de uma palavra-passe errada;
+ - Devolver sempre a mesma resposta (mesmo código de estado, mesma mensagem, mesmo formato) para email inexistente e para palavra-passe errada;
+ - Registar os pedidos bloqueados e os logins falhados (origem, email normalizado, momento), sem guardar palavras-passe;
+ - Confiar em `X-Forwarded-For` apenas quando o pedido vier de um proxy configurado como fiável;
+ - Devolver mensagens de erro genéricas, sem erros da base de dados nem stack traces.
+
+Exemplo de regra válida:
+ - `if (excedeLimite(ip, emailNormalizado)) return res.status(429).set('Retry-After', segundos).json({ erro: 'Demasiados pedidos' });`
+ - `return res.status(401).json({ erro: 'Credenciais inválidas' });` tanto para email inexistente como para palavra-passe errada.
+
+Exemplo de comportamento inválido:
+ - Responder `404 { erro: 'Email não registado' }` quando o email não existe e `401 { erro: 'Palavra-passe errada' }` quando existe;
+ - Só executar `bcrypt.compare` quando o utilizador existe, o que torna as respostas de emails inexistentes visivelmente mais rápidas;
+ - Contar tentativas por email sem normalizar, permitindo contornar o limite com `Ana@x.pt` e `ana@x.pt `;
+ - Ler o IP diretamente de `X-Forwarded-For` sem proxy fiável configurado;
+ - Bloquear a conta indefinidamente após N falhas, sem expiração.
+
+## Regras
+| # | Regra | Como se verifica |
+|---|-------|------------------|
+| 1 | O sistema deve limitar o número de pedidos de login por origem (IP) e o número de tentativas falhadas por email, respondendo com `429` e `Retry-After` quando um limite é excedido | [TESTE AUTOMÁTICO FUNCIONAL] |
+| 2 | A resposta a um email inexistente deve ser indistinguível da resposta a uma palavra-passe errada (mesmo código de estado, mesma mensagem, mesmo formato) | [TESTE AUTOMÁTICO FUNCIONAL] |
+| 3 | O tempo de resposta do login não deve revelar se o email existe | [TESTES NÃO FUNCIONAIS] |
+| 4 | O limite não deve poder ser contornado alterando cabeçalhos (`X-Forwarded-For`) nem variando o formato do email (maiúsculas, espaços) | [TESTE AUTOMÁTICO FUNCIONAL] |
+| 5 | O sistema deve limitar o tamanho do corpo dos pedidos de login e não deve devolver detalhes internos (erros da base de dados, stack traces) nas respostas | [TESTES NÃO FUNCIONAIS] |
+| 6 | Os pedidos bloqueados por excesso devem ser registados para deteção de abuso, e o bloqueio de uma conta deve expirar, sem permitir bloqueios indefinidos por terceiros | [TESTES NÃO FUNCIONAIS] |
+
+## Responsabilidades
+- Dono PS: Gonçalo
+- Aprova exceções/Revisor: Raquel
+- Cumpre/Executa: Sofia
